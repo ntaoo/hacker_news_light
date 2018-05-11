@@ -2,9 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:hacker_news_light/model/hacker_news_service.dart';
+import 'package:hacker_news_light/model/hacker_news_service_mock.dart';
 import 'package:hacker_news_light/model/news_entry.dart';
-import 'package:url_launcher/url_launcher.dart' as url_launcher;
 
 void main() => runApp(HackerNewsLight());
 
@@ -61,7 +60,7 @@ class NewsEntriesState extends State<NewsEntriesPage> {
   final List<NewsEntry> _newsEntries = [];
   final Set<NewsEntry> _savedEntries = Set<NewsEntry>();
   final TextStyle _biggerFontStyle = TextStyle(fontSize: 18.0);
-  final HackerNewsService hackerNewsService = HackerNewsService();
+  final HackerNewsServiceMock hackerNewsService = HackerNewsServiceMock();
 
   int _nextPage = 1;
   bool _isLastPage = false;
@@ -70,7 +69,6 @@ class NewsEntriesState extends State<NewsEntriesPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        elevation: Theme.of(context).platform == TargetPlatform.iOS ? 0.0 : 4.0,
         title: Text('Hacker News Light'),
         actions: <Widget>[
           IconButton(icon: Icon(Icons.list), onPressed: _navigateToSavedPage)
@@ -166,9 +164,6 @@ class NewsEntriesState extends State<NewsEntriesPage> {
           newsEntry: newsEntry,
           savedEntries: _savedEntries,
           handleFavoritePressed: _handleFavoritePressed),
-      onTap: () {
-        _viewNewsEntry(newsEntry);
-      },
     );
   }
 
@@ -234,9 +229,5 @@ class NewsEntriesState extends State<NewsEntriesPage> {
         },
       ),
     );
-  }
-
-  void _viewNewsEntry(NewsEntry entry) {
-    url_launcher.launch(entry.url);
   }
 }

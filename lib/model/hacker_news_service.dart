@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
-import 'package:hackers_news_light/model/news_entry.dart';
+import 'package:hacker_news_light/model/news_entry.dart';
 import 'package:http/http.dart' as http;
 
 const defaultBaseUrl = 'https://api.hnpwa.com/v0';
@@ -23,11 +23,5 @@ class HackerNewsService {
     final jsonMapList = decoded.cast<Map>();
     _cacheFeedResult = jsonMapList.map((e) => NewsEntry.fromMap(e)).toList();
     return _cacheFeedResult;
-  }
-
-  Future<Map> getItem(String id) async {
-    final url = '$_baseUrl/item/$id.json';
-    final response = await http.get(url);
-    return json.decode(response.body);
   }
 }

@@ -2,11 +2,11 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:hacker_news_light/model/hacker_news_service.dart';
+import 'package:hacker_news_light/model/hacker_news_service_mock.dart';
 import 'package:hacker_news_light/model/news_entry.dart';
-import 'package:url_launcher/url_launcher.dart' as url_launcher;
 
 void main() => runApp(HackerNewsLight());
+
 
 typedef void FavoritePressedCallback(
     NewsEntry newsEntry, bool isAlreadySaved, Set<NewsEntry> savedEntries);
@@ -18,8 +18,8 @@ class FavoriteButton extends StatelessWidget {
   final bool isAlreadySaved;
   FavoriteButton(
       {@required this.newsEntry,
-      @required this.savedEntries,
-      @required this.handleFavoritePressed})
+        @required this.savedEntries,
+        @required this.handleFavoritePressed})
       : isAlreadySaved = savedEntries.contains(newsEntry);
 
   @override
@@ -56,12 +56,10 @@ class NewsEntriesPage extends StatefulWidget {
 }
 
 class NewsEntriesState extends State<NewsEntriesPage> {
-  final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
-      GlobalKey<RefreshIndicatorState>();
   final List<NewsEntry> _newsEntries = [];
   final Set<NewsEntry> _savedEntries = Set<NewsEntry>();
   final TextStyle _biggerFontStyle = TextStyle(fontSize: 18.0);
-  final HackerNewsService hackerNewsService = HackerNewsService();
+  final HackerNewsServiceMock hackerNewsService = HackerNewsServiceMock();
 
   int _nextPage = 1;
   bool _isLastPage = false;
@@ -72,9 +70,6 @@ class NewsEntriesState extends State<NewsEntriesPage> {
       appBar: AppBar(
         elevation: Theme.of(context).platform == TargetPlatform.iOS ? 0.0 : 4.0,
         title: Text('Hacker News Light'),
-        actions: <Widget>[
-          IconButton(icon: Icon(Icons.list), onPressed: _navigateToSavedPage)
-        ],
       ),
       body: _buildBody(),
     );
@@ -118,11 +113,7 @@ class NewsEntriesState extends State<NewsEntriesPage> {
         ),
       );
     } else {
-      return RefreshIndicator(
-        key: _refreshIndicatorKey,
-        onRefresh: _getInitialNewsEntries,
-        child: _buildNewsEntriesListView(),
-      );
+      return _buildNewsEntriesListView();
     }
   }
 
@@ -161,14 +152,11 @@ class NewsEntriesState extends State<NewsEntriesPage> {
         style: _biggerFontStyle,
       ),
       subtitle:
-          Text('${newsEntry.domain} | ${newsEntry.commentsCount} comments'),
+      Text('${newsEntry.domain} | ${newsEntry.commentsCount} comments'),
       trailing: FavoriteButton(
           newsEntry: newsEntry,
           savedEntries: _savedEntries,
           handleFavoritePressed: _handleFavoritePressed),
-      onTap: () {
-        _viewNewsEntry(newsEntry);
-      },
     );
   }
 
@@ -194,7 +182,7 @@ class NewsEntriesState extends State<NewsEntriesPage> {
   _handleFavoritePressed(
       NewsEntry newsEntry, bool isAlreadySaved, Set<NewsEntry> savedEntries) {
     setState(
-      () {
+          () {
         if (isAlreadySaved) {
           savedEntries.remove(newsEntry);
         } else {
@@ -202,41 +190,5 @@ class NewsEntriesState extends State<NewsEntriesPage> {
         }
       },
     );
-  }
-
-  void _navigateToSavedPage() {
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (context) {
-          final tiles = _savedEntries.map(
-            (entry) {
-              return ListTile(
-                title: Text(
-                  entry.title,
-                  style: _biggerFontStyle,
-                ),
-              );
-            },
-          );
-          final divided = ListTile
-              .divideTiles(
-                context: context,
-                tiles: tiles,
-              )
-              .toList();
-
-          return Scaffold(
-            appBar: AppBar(
-              title: Text('Saved Entries'),
-            ),
-            body: ListView(children: divided),
-          );
-        },
-      ),
-    );
-  }
-
-  void _viewNewsEntry(NewsEntry entry) {
-    url_launcher.launch(entry.url);
   }
 }

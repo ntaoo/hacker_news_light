@@ -7,7 +7,7 @@
 //import 'package:flutter/material.dart';
 //import 'package:flutter_test/flutter_test.dart';
 //
-//import 'package:hackers_news_light/main.dart';
+//import 'package:hacker_news_light/main.dart';
 //
 //void main() {
 //  testWidgets('Counter increments smoke test', (WidgetTester tester) async {

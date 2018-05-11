@@ -1,8 +1,8 @@
 import 'dart:async';
 
-import 'package:hackers_news_light/mock_data/news1.dart';
-import 'package:hackers_news_light/mock_data/news2.dart';
-import 'package:hackers_news_light/model/news_entry.dart';
+import 'package:hacker_news_light/mock_data/news1.dart';
+import 'package:hacker_news_light/mock_data/news2.dart';
+import 'package:hacker_news_light/model/news_entry.dart';
 
 class HackerNewsServiceMock {
   Future<List<NewsEntry>> getNewsEntries(int page) async {
