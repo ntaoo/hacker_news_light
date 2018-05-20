@@ -1,3 +1,5 @@
+Moved to https://github.com/dartlang-users-jp/hacker_news_light
+
 # hackers_news_light
 
 A new Flutter project.
